@@ -1,4 +1,3 @@
-
 export const formSize = {
     two   : "col-md-2",
     three : "col-md-3",

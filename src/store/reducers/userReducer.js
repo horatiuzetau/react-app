@@ -13,7 +13,6 @@ const initState = {
 export default (state = initState, action) => {
     switch(action.type){
         case FETCH_USERS_SUCCESS:
-            // TO DO
             return {
                 ...state,
                 list: action.payload,
