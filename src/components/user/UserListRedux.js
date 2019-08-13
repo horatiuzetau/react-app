@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
 import { connect } from 'react-redux';
 
+import UserCard from './UserCard';
+
 import {
-     fetchUsersSuccess,
-     fetchUsersLoading,
-     fetchUsersFailure,
+    fetch
 } from '../../store/actions/userActions';
 
 
@@ -21,26 +20,22 @@ class UserListRedux extends Component {
     }
 
     fetchUsers(){
-
-        let { fetchUsersSuccess, fetchUsersLoading, fetchUsersFailure }  = this.props;
-
-        fetchUsersLoading();
-
-        Axios
-            .get("http://localhost:8080/api/users")
-            .then(res => fetchUsersSuccess(res.data))
-            .catch(err => fetchUsersFailure(err))
+        this.props.fetch();
     }
 
     render() { 
         let { list, loading, error } = this.props.users;
-    
+        
+        
+        let userList = list.length ? list.map((user, key) => 
+            <UserCard key={key} user={user} />
+        ) : "Niciun user present in baza de date...";
 
         return ( 
             <>
                 {loading && "loading..."}
                 {error   && "error..."}
-                {list.map((a, k) => <li key={k}>{a.username}</li>)}
+                {loading && error && userList}
             </>
          );
     }
@@ -55,9 +50,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-    fetchUsersSuccess,
-    fetchUsersLoading,
-    fetchUsersFailure,
+    fetch,
 }
  
 export default connect(mapStateToProps, mapDispatchToProps)(UserListRedux);

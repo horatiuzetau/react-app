@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import UserCard from './UserCard';
 
 const initState = {
     loading: false,
@@ -22,7 +23,6 @@ class UserList extends Component {
     fetchUsers(){
 
         this.setState({ loading: true });
-
         Axios
             .get("http://localhost:8080/api/users")
             .then(res => this.setState({ list: res.data, loading: false, error: null  }))
@@ -33,12 +33,16 @@ class UserList extends Component {
         let { list, loading, error } = this.state;
 
         // AICI fac ce vreau cu lista de useri
+
+        let userList = list.length ? list.map((user, key) => 
+            <UserCard key={key} user={user} />
+        ) : "Nu exista niciun user in baza de date...";
     
         return ( 
             <>
                 {loading && "loading..."}
                 {error   && "error..."}
-                {list.map((a, k) => <li key={k}>{a.username}</li>)}
+                {loading && error && userList}
             </>
          );
     }

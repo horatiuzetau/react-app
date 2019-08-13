@@ -3,9 +3,6 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 
 class Navbar extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() { 
         return ( 
@@ -22,6 +19,9 @@ class Navbar extends Component {
                         </li>
                         <li className="nav-item">
                             <NavLink to="/register" className="nav-link" >Register</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/cars" className="nav-link" >Cars</NavLink>
                         </li>
                     </ul>
                 </div>

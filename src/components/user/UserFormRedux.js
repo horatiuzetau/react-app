@@ -4,6 +4,9 @@ import { formSize } from '../form/FormConsts';
 import FormGroup from '../form/FormGroup';
 import Axios from 'axios';
 
+import { register } from '../../store/actions/userActions';
+import { connect } from 'react-redux';
+
 
 const initState = {
     username: '',
@@ -22,7 +25,6 @@ class UserForm extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.createUser   = this.createUser.bind(this);
     }
 
     handleChange(value, name){
@@ -35,32 +37,20 @@ class UserForm extends Component {
         e.preventDefault();
         
         
-        let data = {...this.state, username: this.state.username.trim()}
-        if(data.username !== "")
-            this.createUser(data);
-    }
+        let data = {...this.state, username: this.state.username.trim()};
 
-    // AICI SE FACE REQUESt FARA REDUX
-    createUser(data){
-        Axios
-            .post("http://localhost:8080/api/users", data)
-            .then(res => {
-                this.setState({
-                    prompt: {
-                        msg: "Inserted with id " + res.data.id,
-                        err: false,
-                    }
-                })
-            })
-            .catch(err => {
-                this.setState({
-                    prompt: {
-                        msg: "Error",
-                        err: true,
-                    }
-                })
-            })
+        if(data.username !== ""){
+            this.props.register(data)
+                            .then(res => {
+                                this.setState({...initState, prompt: {msg: "Inserted " + res.data.id, err: false}})
+                            })
+                            .catch(err => {
+                                this.setState({...initState, prompt: {msg: "Error here...", err: true}})
+                            });
+
+        }
         
+        // Resetam mesajul afisat. A fost doar un feedback la request pentru utilizator.
         setTimeout(() => {
             this.setState({
                 prompt: {
@@ -68,7 +58,7 @@ class UserForm extends Component {
                     err: false,
                 },
             })
-        }, 2000);
+        }, 1500);
     }
 
     render() { 
@@ -103,5 +93,9 @@ class UserForm extends Component {
         );
     }
 }
+
+const mapDispatchToProps = {
+    register,
+}
  
-export default UserForm;
+export default connect(null,mapDispatchToProps)(UserForm);
